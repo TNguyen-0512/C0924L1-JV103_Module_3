@@ -36,19 +36,6 @@ create table NHAP_VTU(
 	foreign key (SoPN) references PHIEUNHAP(SoPN),
     foreign key (MaVTU) references VATTU(MaVTU)
 );
--- tạo đơn đặt hàng --
-create table DONDH(
-	SoDH int auto_increment primary key,
-    NgayDH date
-);
--- tạo DDH_VTU---
-create table DDH_VTU(
-	MaVTU int,
-    SoDH int,
-    primary key(MaVTU, SoDH),
-    foreign key (MaVTU) references VATTU(MaVTU),
-    foreign key (SoDH) references DONDH(SoDH)
-);
 -- tạo nhà cung cấp --
 create table NHACC(
 	MaNCC int primary key,
@@ -60,11 +47,18 @@ create table SDT(
     MaNCC int,
     foreign key(MaNCC) references NHACC(MaNCC)
 );
--- tạo DH_NCC--
-create table DH_NCC(
-	SoDH int,
+-- tạo đơn đặt hàng --
+create table DONDH(
+	SoDH int auto_increment primary key,
+    NgayDH date,
     MaNCC int,
-    primary key(SoDH, MaNCC),
-    foreign key(SoDH) references DONDH(SoDH),
     foreign key(MaNCC) references NHACC(MaNCC)
+);
+-- tạo DDH_VTU---
+create table DDH_VTU(
+	MaVTU int,
+    SoDH int,
+    primary key(MaVTU, SoDH),
+    foreign key (MaVTU) references VATTU(MaVTU),
+    foreign key (SoDH) references DONDH(SoDH)
 );
