@@ -1,6 +1,6 @@
 -- tạo csdl---
-create database if not exists c0924L1;
-use c0924L1;
+create database if not exists quan_ly_sinh_vien;
+use quan_ly_sinh_vien;
 -- tạo table ---
 create table Class(
 	id int primary key auto_increment,

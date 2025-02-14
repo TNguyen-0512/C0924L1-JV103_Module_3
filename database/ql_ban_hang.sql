@@ -25,6 +25,7 @@ create table Product(
 create table OrderDetail(
 	oID int,
     pID int,
+    odQTY int,
     primary key(oID, pID),
     foreign key(oID) references `Order`(oID),
     foreign key(pID) references Product(pID)
