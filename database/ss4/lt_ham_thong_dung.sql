@@ -1,36 +1,18 @@
-use quan_ly_sinh_vien;
+USE quan_ly_sinh_vien;
+-- câu 1--
+SELECT * 
+FROM Subject 
+WHERE Credit = (SELECT MAX(Credit) FROM Subject);
 
-SELECT 
-    *
-FROM
-    subject
-WHERE
-    credit = (SELECT 
-            MAX(credit)
-        FROM
-            subject);
+-- câu 2 
+SELECT s.*
+FROM Subject s
+JOIN Mark m ON s.SubId = m.SubId
+WHERE m.Mark = (SELECT MAX(Mark) FROM Mark);
 
--- Hiển thị các thông tin môn học có điểm thi lớn nhất.
-
-SELECT 
-    c.name
-FROM
-    student s
-        JOIN
-    class c ON s.class_id = c.id
-WHERE
-    s.point = (SELECT 
-            MAX(point)
-        FROM
-            student);
-
--- Hiển thị các thông tin sinh viên (em thay bằng lớp vì mỗi sinh viên chỉ có 1 điểm) và điểm trung bình của mỗi sinh viên, xếp hạng theo thứ tự điểm giảm dần
-
-SELECT 
-    c.name, AVG(point) average_point
-FROM
-    student s
-        JOIN
-    class c ON s.class_id = c.id
-GROUP BY c.name
-ORDER BY average_point DESC;
+-- câu 3
+SELECT st.StudentId, st.StudentName, COALESCE(AVG(m.Mark), 0) AS AvgMark
+FROM Student st
+LEFT JOIN Mark m ON st.StudentId = m.StudentId
+GROUP BY st.StudentId, st.StudentName
+ORDER BY AvgMark DESC;
