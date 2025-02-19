@@ -4,15 +4,15 @@ use ss5_view_index_store_procedure;
 -- tạo bảng Products---
 create table products(
 	id int primary key auto_increment,
-    productCode varchar(50),
-    productName varchar(50),
-    productPrice int,
-    productAmount int ,
-    productDescription varchar(50),
-    productStatus enum('Còn hàng','Hết hàng') not null
+    product_code varchar(50),
+    product_name varchar(50),
+    product_price int,
+    product_amount int ,
+    product_description varchar(50),
+    product_status enum('Còn hàng','Hết hàng') not null
 );
 -- thêm dữ liệu --
-insert into products (productCode, productName, productPrice, productAmount, productDescription, productStatus)  
+insert into products (product_code, product_name, product_price, product_amount, product_description, product_status)  
 values  
 ('P001', 'Laptop Dell', 1500, 10, 'High-performance laptop', 'Còn hàng'),
 ('P002', 'iPhone 15', 1200, 5, 'Latest Apple smartphone', 'Còn hàng'),
@@ -22,30 +22,30 @@ values
 ('P006', 'iPad Air 2024', 700, 12, 'Lightweight and powerful tablet', 'Còn hàng'),
 ('P007', 'Logitech MX Master 3', 100, 20, 'High-precision wireless mouse', 'Còn hàng');
 -- truy vấn trước khi tạo index--
-explain select * from products where productName = 'Laptop Dell' and productPrice = 1500;
+explain select * from products where product_name = 'Laptop Dell' and product_price = 1500;
 -- tạo unique index ---
-create unique index idx_productCode ON products (productCode);
+create unique index idx_product_code ON products (product_code);
 -- Tạo Composite Index trên bảng Products (sử dụng 2 cột productName và productPrice)--
-create index idx_productName_price on products(productName, productPrice);
+create index idx_product_name_price on products(product_name, product_price);
 -- truy vấn sau khi tạo index --
-explain select * from products where productName = 'Laptop Dell' and productPrice = 1500;
+explain select * from products where product_name = 'Laptop Dell' and product_price = 1500;
 -- tạo view --
 create view product_view
 as
-select productCode, productName, productPrice, productStatus
+select product_code, product_name, product_price, product_ptatus
 from products;
 -- truy vấn view --
 select * from product_view;
 -- sửa đổi view --
 create or replace view product_view AS
-SELECT productCode, productName, productPrice, productAmount, productStatus
+SELECT product_code, product_name, product_price, product_amount, product_status
 FROM products;
 -- xóa view --
 drop view if exists product_view;
 -- Tạo store procedure lấy tất cả thông tin của tất cả các sản phẩm trong bảng product--
 DELIMITER //
 
-CREATE PROCEDURE getAllProducts()
+CREATE PROCEDURE get_all_products()
 BEGIN
     SELECT * FROM products;
 END //
@@ -55,39 +55,39 @@ DELIMITER ;
 DELIMITER //
 
 CREATE PROCEDURE addProduct(
-    IN p_productCode VARCHAR(50),
-    IN p_productName VARCHAR(50),
-    IN p_productPrice INT,
-    IN p_productAmount INT,
-    IN p_productDescription VARCHAR(50),
-    IN p_productStatus ENUM('Còn hàng', 'Hết hàng')
+    IN p_product_code VARCHAR(50),
+    IN p_product_name VARCHAR(50),
+    IN p_product_price INT,
+    IN p_product_amount INT,
+    IN p_product_description VARCHAR(50),
+    IN p_product_status ENUM('Còn hàng', 'Hết hàng')
 )
 BEGIN
-    INSERT INTO products (productCode, productName, productPrice, productAmount, productDescription, productStatus)
-    VALUES (p_productCode, p_productName, p_productPrice, p_productAmount, p_productDescription, p_productStatus);
+    INSERT INTO products (product_code, product_name, product_price, product_amount, product_description, product_status)
+    VALUES (p_product_code, p_product_name, p_product_price, p_product_amount, p_product_description, p_product_status);
 END //
 
 DELIMITER ;
 -- Tạo store procedure sửa thông tin sản phẩm theo id--
 DELIMITER //
 
-CREATE PROCEDURE updateProduct(
+CREATE PROCEDURE update_product(
     IN p_id INT,
-    IN p_productCode VARCHAR(50),
-    IN p_productName VARCHAR(50),
-    IN p_productPrice INT,
-    IN p_productAmount INT,
-    IN p_productDescription VARCHAR(50),
-    IN p_productStatus ENUM('Còn hàng', 'Hết hàng')
+    IN p_product_code VARCHAR(50),
+    IN p_product_name VARCHAR(50),
+    IN p_product_price INT,
+    IN p_product_amount INT,
+    IN p_product_description VARCHAR(50),
+    IN p_product_status ENUM('Còn hàng', 'Hết hàng')
 )
 BEGIN
     UPDATE products
-    SET productCode = p_productCode,
-        productName = p_productName,
-        productPrice = p_productPrice,
-        productAmount = p_productAmount,
-        productDescription = p_productDescription,
-        productStatus = p_productStatus
+    SET product_code = p_product_code,
+        product_name = p_product_name,
+        product_price = p_product_price,
+        product_amount = p_product_amount,
+        product_description = p_product_description,
+        product_status = p_product_status
     WHERE id = p_id;
 END //
 
@@ -95,7 +95,7 @@ DELIMITER ;
 -- Tạo store procedure xoá sản phẩm theo id --
 DELIMITER $$
 
-CREATE PROCEDURE deleteProduct(IN p_id INT)
+CREATE PROCEDURE delete_product(IN p_id INT)
 BEGIN
     DELETE FROM products WHERE id = p_id;
 END $$
