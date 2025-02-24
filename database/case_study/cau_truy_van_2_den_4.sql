@@ -16,8 +16,3 @@ join hop_dong on khach_hang.ma_khach_hang = hop_dong.ma_khach_hang
 where loai_khach.ten_loai_khach = 'Diamond'
 group by khach_hang.ma_khach_hang, khach_hang.ho_ten
 order by so_lan_dat_phong asc;
--- câu 5 --
-select khach_hang.ma_khach_hang, khach_hang.ho_ten, loai_khach.ten_loai_khach, hop_dong.ma_hop_dong, dich_vu.ten_dich_vu, hop_dong.ngay_lam_hop_dong, hop_dong.ngay_ket_thuc,
-
-from khach_hang
-join hop_dong on hop_dong.ma_hop_dong,
