@@ -14,7 +14,7 @@ public class DiscountServlet extends HttpServlet {
         //chạy khi gửi request bằng mothod post
         String productName = req.getParameter("product_description");
         double price = Double.parseDouble(req.getParameter("list_price"));
-        double discountPercent = Double.parseDouble(req.getParameter("dicount_percent"));
+        double discountPercent = Double.parseDouble(req.getParameter("discount_percent"));
         double discountAmount = price*discountPercent*0.1;
         double discountPrice = price-discountAmount;
         req.setAttribute("productName", productName);
