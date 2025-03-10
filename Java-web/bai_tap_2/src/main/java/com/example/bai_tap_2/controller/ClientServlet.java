@@ -1,4 +1,4 @@
-package com.example.bai_tap_2.Controller;
+package com.example.bai_tap_2.controller;
 
 import com.example.bai_tap_2.model.Client;
 import com.example.bai_tap_2.repository.ClientRepository;
@@ -10,8 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(name="ClientServlet",value = "/clients")
