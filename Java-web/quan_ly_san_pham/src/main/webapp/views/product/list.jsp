@@ -13,7 +13,6 @@
 </head>
 <body>
 <h1>Danh sách sản phẩm</h1>
-<form action="//products?action" method="get">
     <table border="1">
         <tr>
             <th>Id</th>
@@ -21,6 +20,8 @@
             <th>Giá sản phẩm</th>
             <th>Mô tả</th>
             <th>Nhà sản xuất</th>
+            <th>Sửa</th>
+            <th>Xóa</th>
         </tr>
         <c:forEach items="${products}" var="product" varStatus="status">
             <tr>
@@ -29,9 +30,11 @@
                 <td>${product.price}VND</td>
                 <td>${product.description}</td>
                 <td>${product.manufacturer}</td>
+                <td><button>Sửa</button></td>
+                <td><button>Xóa</button></td>
             </tr>
         </c:forEach>
     </table>
-</form>
+<a href="${pageContext.request.contextPath}/products?action=add">Thêm mới</a>
 </body>
 </html>
