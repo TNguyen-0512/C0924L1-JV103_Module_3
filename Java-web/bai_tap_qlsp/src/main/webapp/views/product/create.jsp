@@ -12,10 +12,7 @@
 </head>
 <body>
 <h1>Thêm mới</h1>
-<form action="${pageContext.request.contextPath}/products?action=create" method="post">
-    <label>
-        <input type="number" name="id" placeholder="Nhập ID">
-    </label>
+<form action="/products?action=create" method="post">
     <label>
         <input type="text" name="name" placeholder="Nhập tên">
     </label>
