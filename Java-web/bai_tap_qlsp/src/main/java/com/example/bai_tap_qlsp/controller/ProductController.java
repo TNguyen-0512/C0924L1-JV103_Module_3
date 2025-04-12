@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
+import static jdk.jfr.internal.consumer.EventLog.update;
+
 @WebServlet(name = "ProductController", value = "/products")
 public class ProductController extends HttpServlet {
     private ProductService productService = new ProductService();
@@ -51,9 +53,30 @@ public class ProductController extends HttpServlet {
             case "delete":
                 break;
             case "update":
+                update(req, resp);
                 break;
             default:
 
+        }
+    }
+
+    private void update(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        try {
+            int id = Integer.parseInt(req.getParameter("id"));
+            String name = req.getParameter("name");
+            double price = Double.parseDouble(req.getParameter("price"));
+            String description = req.getParameter("description");
+            String manufacturer = req.getParameter("manufacturer");
+
+            Product updatedProduct = new Product(id, name, price, description, manufacturer);
+            boolean isUpdated = productService.update(updatedProduct);
+
+            String mess = isUpdated ? "Update success" : "Update failed";
+            resp.sendRedirect("/products?mess=" + mess);
+        } catch (NumberFormatException e) {
+            resp.sendRedirect("/products?mess=Invalid input");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

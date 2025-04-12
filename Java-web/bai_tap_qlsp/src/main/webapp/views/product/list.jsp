@@ -36,12 +36,12 @@
   <c:forEach items="${products}" var="product" varStatus="status">
     <tr>
       <td>${product.id}</td>
-      <td>${product.name}</td>
-      <td>${product.price}VND</td>
-      <td>${product.description}</td>
-      <td>${product.manufacturer}</td>
+      <td><input type="text" value="${product.name}"></td>
+      <td><input type="number" value="${product.price}"></td>
+      <td><input type="text" value="${product.description}"></td>
+      <td><input type="text" value="${product.manufacturer}"></td>
       <td><button onclick="del(`${product.getId()}`,`${product.getName()}`)" type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">Xóa</button></td>
-      <td><a class="btn btn-sm btn-primary">Sửa</a></td>
+      <td><button type="submit" class="btn btn-primary btn-sm">Sửa</button></td>
     </tr>
   </c:forEach>
 </table>
