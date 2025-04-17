@@ -2,12 +2,12 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
-  <title>Thêm mới khách hàng</title>
+  <title>Thêm khách hàng</title>
   <c:import url="../layout/labrary.jsp"/>
 </head>
 <body>
-<div class="d-flex bg-info text-dark justify-content-center">
-  <h1>Thêm mới khách hàng</h1>
+<div class="d-flex bg-success text-white justify-content-center">
+  <h1>Thêm khách hàng mới</h1>
 </div>
 
 <div class="container mt-4">
@@ -71,21 +71,19 @@
         </div>
 
         <div class="form-group row">
-          <label for="maLoaiKhach" class="col-sm-3 col-form-label">Loại khách:</label>
+          <label for="loaiKhach" class="col-sm-3 col-form-label">Loại khách:</label>
           <div class="col-sm-9">
-            <select class="form-control" id="maLoaiKhach" name="maLoaiKhach" required>
-              <option value="1">Diamond</option>
-              <option value="2">Platinum</option>
-              <option value="3">Gold</option>
-              <option value="4">Silver</option>
-              <option value="5">Member</option>
+            <select class="form-control" id="loaiKhach" name="loaiKhach" required>
+              <c:forEach var="lk" items="${loaiKhachList}">
+                <option value="${lk.tenLoaiKhach}">${lk.tenLoaiKhach}</option>
+              </c:forEach>
             </select>
           </div>
         </div>
 
         <div class="form-group row">
           <div class="col-sm-9 offset-sm-3">
-            <button type="submit" class="btn btn-primary">Lưu</button>
+            <button type="submit" class="btn btn-success">Thêm khách hàng</button>
             <a href="/khachhang" class="btn btn-secondary">Hủy</a>
           </div>
         </div>

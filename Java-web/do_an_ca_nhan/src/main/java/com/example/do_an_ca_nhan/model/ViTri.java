@@ -4,10 +4,16 @@ public class ViTri {
     private int maViTri;
     private String tenViTri;
 
+
     public ViTri(int maViTri, String tenViTri) {
         this.maViTri = maViTri;
         this.tenViTri = tenViTri;
     }
+
+    public ViTri() {
+
+    }
+
 
     public int getMaViTri() {
         return maViTri;

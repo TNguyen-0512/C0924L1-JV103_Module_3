@@ -1,5 +1,6 @@
 package com.example.do_an_ca_nhan.service;
 
+import com.example.do_an_ca_nhan.dto.KhachHangDTO;
 import com.example.do_an_ca_nhan.model.KhachHang;
 import com.example.do_an_ca_nhan.repository.IKhachHangRepository;
 import com.example.do_an_ca_nhan.repository.KhachHangRepository;
@@ -8,18 +9,19 @@ import java.util.List;
 
 public class KhachHangService implements IKhachHangService {
     private IKhachHangRepository repo = new KhachHangRepository();
+
     @Override
-    public List<KhachHang> findAll() {
+    public List<KhachHangDTO> findAll() {
         return repo.findAll();
     }
 
     @Override
-    public boolean add(KhachHang khachHang) {
+    public boolean add(KhachHangDTO khachHang) {
         return repo.add(khachHang);
     }
 
     @Override
-    public boolean update(KhachHang khachHang) {
+    public boolean update(KhachHangDTO khachHang) {
         return repo.update(khachHang);
     }
 
@@ -29,12 +31,12 @@ public class KhachHangService implements IKhachHangService {
     }
 
     @Override
-    public List<KhachHang> findByName(String name) {
+    public List<KhachHangDTO> findByName(String name) {
         return repo.findByName(name);
     }
 
     @Override
-    public KhachHang findById(int id) {
+    public KhachHangDTO findById(int id) {
         return repo.findById(id);
     }
 }

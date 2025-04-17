@@ -9,6 +9,10 @@ public class LoaiKhach {
         this.tenLoaiKhach = tenLoaiKhach;
     }
 
+    public LoaiKhach() {
+
+    }
+
     public int getMaLoaiKhach() {
         return maLoaiKhach;
     }
