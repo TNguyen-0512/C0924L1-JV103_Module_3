@@ -9,6 +9,10 @@ public class TrinhDo {
         this.tenTrinhDo = tenTrinhDo;
     }
 
+    public TrinhDo() {
+
+    }
+
     public int getMaTrinhDo() {
         return maTrinhDo;
     }

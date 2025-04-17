@@ -9,6 +9,10 @@ public class BoPhan {
         this.tenBoPhan = tenBoPhan;
     }
 
+    public BoPhan() {
+
+    }
+
     public int getMaBoPhan() {
         return maBoPhan;
     }

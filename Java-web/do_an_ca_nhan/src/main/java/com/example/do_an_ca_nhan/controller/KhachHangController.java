@@ -1,8 +1,11 @@
 package com.example.do_an_ca_nhan.controller;
 
-import com.example.do_an_ca_nhan.model.KhachHang;
+import com.example.do_an_ca_nhan.dto.KhachHangDTO;
+import com.example.do_an_ca_nhan.model.LoaiKhach;
 import com.example.do_an_ca_nhan.service.IKhachHangService;
+import com.example.do_an_ca_nhan.service.ILoaiKhachService;
 import com.example.do_an_ca_nhan.service.KhachHangService;
+import com.example.do_an_ca_nhan.service.LoaiKhachService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,6 +19,7 @@ import java.util.List;
 @WebServlet(name = "KhachHangController", value = "/khachhang")
 public class KhachHangController extends HttpServlet {
     private IKhachHangService khachHangService = new KhachHangService();
+    private ILoaiKhachService loaiKhachService = new LoaiKhachService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -43,11 +47,13 @@ public class KhachHangController extends HttpServlet {
     }
 
     private void showFormCreate(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        List<LoaiKhach> loaiKhachList = loaiKhachService.findAll();
+        req.setAttribute("loaiKhachList", loaiKhachList);
         req.getRequestDispatcher("/views/khach_hang/them_khach_hang.jsp").forward(req, resp);
     }
 
     private void showList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<KhachHang> khachHangList = khachHangService.findAll();
+        List<KhachHangDTO> khachHangList = khachHangService.findAll();
         req.setAttribute("khachHangList", khachHangList);
         req.getRequestDispatcher("/views/khach_hang/danh_sach_khach_hang.jsp").forward(req, resp);
     }
@@ -55,16 +61,13 @@ public class KhachHangController extends HttpServlet {
     private void deleteById(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int id = Integer.parseInt(req.getParameter("id"));
         boolean isDeleted = khachHangService.delete(id);
-        String mess = "Delete not success";
-        if (isDeleted) {
-            mess = "Delete success";
-        }
+        String mess = isDeleted ? "Delete success" : "Delete not success";
         resp.sendRedirect("/khachhang?mess=" + mess);
     }
 
     private void searchByName(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String name = req.getParameter("searchName");
-        List<KhachHang> khachHangList = khachHangService.findByName(name);
+        List<KhachHangDTO> khachHangList = khachHangService.findByName(name);
         req.setAttribute("khachHangList", khachHangList);
         req.setAttribute("searchName", name);
         req.getRequestDispatcher("/views/khach_hang/danh_sach_khach_hang.jsp").forward(req, resp);
@@ -72,8 +75,10 @@ public class KhachHangController extends HttpServlet {
 
     private void showFormEdit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int id = Integer.parseInt(req.getParameter("id"));
-        KhachHang khachHangEdit = khachHangService.findById(id);
+        KhachHangDTO khachHangEdit = khachHangService.findById(id);
+        List<LoaiKhach> loaiKhachList = loaiKhachService.findAll();
         req.setAttribute("khachHangEdit", khachHangEdit);
+        req.setAttribute("loaiKhachList", loaiKhachList);
         req.getRequestDispatcher("/views/khach_hang/sua_khach_hang.jsp").forward(req, resp);
     }
 
@@ -92,10 +97,11 @@ public class KhachHangController extends HttpServlet {
                 update(req, resp);
                 break;
             default:
+                resp.sendRedirect("/khachhang");
         }
     }
 
-    private void save(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void save(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String hoTen = req.getParameter("hoTen");
         Date ngaySinh = Date.valueOf(req.getParameter("ngaySinh"));
         boolean gioiTinh = Boolean.parseBoolean(req.getParameter("gioiTinh"));
@@ -103,24 +109,23 @@ public class KhachHangController extends HttpServlet {
         String soDienThoai = req.getParameter("soDienThoai");
         String email = req.getParameter("email");
         String diaChi = req.getParameter("diaChi");
-        int maLoaiKhach = Integer.parseInt(req.getParameter("maLoaiKhach"));
-
-        KhachHang khachHang = new KhachHang();
-        khachHang.setHoTen(hoTen);
-        khachHang.setNgaySinh(ngaySinh);
-        khachHang.setGioiTinh(gioiTinh);
-        khachHang.setSoCMND(soCMND);
-        khachHang.setSoDienThoai(soDienThoai);
-        khachHang.setEmail(email);
-        khachHang.setDiaChi(diaChi);
-        khachHang.setMaLoaiKhach(maLoaiKhach);
-
-        boolean isSaved = khachHangService.add(khachHang);
+        String loaiKhach = req.getParameter("loaiKhach"); // CHỈ LẤY TÊN loại khách
+        KhachHangDTO kh = new KhachHangDTO();
+        kh.setHoTen(hoTen);
+        kh.setNgaySinh(ngaySinh);
+        kh.setGioiTinh(gioiTinh);
+        kh.setSoCMND(soCMND);
+        kh.setSoDienThoai(soDienThoai);
+        kh.setEmail(email);
+        kh.setDiaChi(diaChi);
+        kh.setLoaiKhach(loaiKhach); // Truyền tên loại khách
+        boolean isSaved = khachHangService.add(kh);
         String mess = isSaved ? "Thêm khách hàng thành công" : "Thêm khách hàng thất bại";
         resp.sendRedirect("/khachhang?mess=" + mess);
     }
 
-    private void update(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+    private void update(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
             int maKhachHang = Integer.parseInt(req.getParameter("maKhachHang"));
             String hoTen = req.getParameter("hoTen");
@@ -130,9 +135,9 @@ public class KhachHangController extends HttpServlet {
             String soDienThoai = req.getParameter("soDienThoai");
             String email = req.getParameter("email");
             String diaChi = req.getParameter("diaChi");
-            int maLoaiKhach = Integer.parseInt(req.getParameter("maLoaiKhach"));
+            String maLoaiKhach = req.getParameter("loaiKhach");
 
-            KhachHang khachHang = new KhachHang();
+            KhachHangDTO khachHang = new KhachHangDTO();
             khachHang.setMaKhachHang(maKhachHang);
             khachHang.setHoTen(hoTen);
             khachHang.setNgaySinh(ngaySinh);
@@ -141,14 +146,15 @@ public class KhachHangController extends HttpServlet {
             khachHang.setSoDienThoai(soDienThoai);
             khachHang.setEmail(email);
             khachHang.setDiaChi(diaChi);
-            khachHang.setMaLoaiKhach(maLoaiKhach);
+            khachHang.setLoaiKhach(maLoaiKhach);
 
             boolean isUpdated = khachHangService.update(khachHang);
             String mess = isUpdated ? "Cập nhật khách hàng thành công" : "Cập nhật khách hàng thất bại";
-            resp.sendRedirect("/khachhang?mess=" + mess); // <-- PHẢI CÓ
+            resp.sendRedirect("/khachhang?mess=" + mess);
         } catch (Exception e) {
-            e.printStackTrace(); // In ra lỗi nếu có
+            e.printStackTrace();
             resp.sendRedirect("/khachhang?mess=update_error");
         }
     }
+
 }

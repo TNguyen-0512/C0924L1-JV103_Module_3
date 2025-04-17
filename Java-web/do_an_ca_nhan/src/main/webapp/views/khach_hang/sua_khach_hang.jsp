@@ -73,14 +73,12 @@
         </div>
 
         <div class="form-group row">
-          <label for="maLoaiKhach" class="col-sm-3 col-form-label">Loại khách:</label>
+          <label for="loaiKhach" class="col-sm-3 col-form-label">Loại khách:</label>
           <div class="col-sm-9">
-            <select class="form-control" id="maLoaiKhach" name="maLoaiKhach" required>
-              <option value="1" ${khachHangEdit.maLoaiKhach == 1 ? 'selected' : ''}>Diamond</option>
-              <option value="2" ${khachHangEdit.maLoaiKhach == 2 ? 'selected' : ''}>Platinum</option>
-              <option value="3" ${khachHangEdit.maLoaiKhach == 3 ? 'selected' : ''}>Gold</option>
-              <option value="4" ${khachHangEdit.maLoaiKhach == 4 ? 'selected' : ''}>Silver</option>
-              <option value="5" ${khachHangEdit.maLoaiKhach == 5 ? 'selected' : ''}>Member</option>
+            <select class="form-control" id="loaiKhach" name="loaiKhach" required>
+              <c:forEach var="lk" items="${loaiKhachList}">
+                <option value="${lk.maLoaiKhach}" ${khachHangEdit.loaiKhach == lk.tenLoaiKhach ? 'selected' : ''}>${lk.tenLoaiKhach}</option>
+              </c:forEach>
             </select>
           </div>
         </div>

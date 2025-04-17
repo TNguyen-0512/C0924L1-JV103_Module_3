@@ -1,8 +1,9 @@
-package com.example.do_an_ca_nhan.model;
+package com.example.do_an_ca_nhan.dto;
 
-import java.util.Date;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 
-public class NhanVien {
+public class NhanVienDTO {
     private int maNhanVien;
     private String hoTen;
     private Date ngaySinh;
@@ -11,13 +12,12 @@ public class NhanVien {
     private String soDienThoai;
     private String email;
     private String diaChi;
-    private int maViTri;
-    private int maTrinhDo;
-    private int maBoPhan;
 
+    private String tenViTri;
+    private String tenTrinhDo;
+    private String tenBoPhan;
 
-
-    public NhanVien(int maNhanVien, String hoTen, Date ngaySinh, String soCMND, double luong, String soDienThoai, String email, String diaChi, int maViTri, int maTrinhDo, int maBoPhan) {
+    public NhanVienDTO(int maNhanVien, String hoTen, Date ngaySinh, String soCMND, double luong, String soDienThoai, String email, String diaChi, String tenViTri, String tenTrinhDo, String tenBoPhan) {
         this.maNhanVien = maNhanVien;
         this.hoTen = hoTen;
         this.ngaySinh = ngaySinh;
@@ -26,15 +26,14 @@ public class NhanVien {
         this.soDienThoai = soDienThoai;
         this.email = email;
         this.diaChi = diaChi;
-        this.maViTri = maViTri;
-        this.maTrinhDo = maTrinhDo;
-        this.maBoPhan = maBoPhan;
+        this.tenViTri = tenViTri;
+        this.tenTrinhDo = tenTrinhDo;
+        this.tenBoPhan = tenBoPhan;
     }
 
-    public NhanVien() {
+    public NhanVienDTO() {
 
     }
-
 
     public int getMaNhanVien() {
         return maNhanVien;
@@ -52,8 +51,8 @@ public class NhanVien {
         this.hoTen = hoTen;
     }
 
-    public java.sql.Date getNgaySinh() {
-        return (java.sql.Date) ngaySinh;
+    public Date getNgaySinh() {
+        return ngaySinh;
     }
 
     public void setNgaySinh(Date ngaySinh) {
@@ -100,27 +99,27 @@ public class NhanVien {
         this.diaChi = diaChi;
     }
 
-    public int getMaViTri() {
-        return maViTri;
+    public String getTenViTri() {
+        return tenViTri;
     }
 
-    public void setMaViTri(int maViTri) {
-        this.maViTri = maViTri;
+    public void setTenViTri(String tenViTri) {
+        this.tenViTri = tenViTri;
     }
 
-    public int getMaTrinhDo() {
-        return maTrinhDo;
+    public String getTenTrinhDo() {
+        return tenTrinhDo;
     }
 
-    public void setMaTrinhDo(int maTrinhDo) {
-        this.maTrinhDo = maTrinhDo;
+    public void setTenTrinhDo(String tenTrinhDo) {
+        this.tenTrinhDo = tenTrinhDo;
     }
 
-    public int getMaBoPhan() {
-        return maBoPhan;
+    public String getTenBoPhan() {
+        return tenBoPhan;
     }
 
-    public void setMaBoPhan(int maBoPhan) {
-        this.maBoPhan = maBoPhan;
+    public void setTenBoPhan(String tenBoPhan) {
+        this.tenBoPhan = tenBoPhan;
     }
 }

@@ -1,6 +1,6 @@
 package com.example.do_an_ca_nhan.repository;
 
-import com.example.do_an_ca_nhan.model.KhachHang;
+import com.example.do_an_ca_nhan.dto.KhachHangDTO;
 import com.example.do_an_ca_nhan.util.BaseRepository;
 
 import java.sql.*;
@@ -8,140 +8,162 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class KhachHangRepository implements IKhachHangRepository {
-    private final String SELECT_ALL ="select * from khach_hang";
-    private final String DELETE_BY_ID ="delete from khach_hang where ma_khach_hang =?";
-    private final String INSERT_INTO ="insert into khach_hang (ho_ten, ngay_sinh, gioi_tinh, so_cmnd, so_dien_thoai, email, dia_chi, ma_loai_khach) values (?,?,?,?,?,?,?,?)";
-    private final String UPDATE_PRODUCT = "update khach_hang set ho_ten=?, ngay_sinh=?, gioi_tinh=?, so_cmnd=?, so_dien_thoai=?, email=?, dia_chi=?, ma_loai_khach=? where ma_khach_hang=?";
-    private final String FIND_BY_NAME = "SELECT * FROM khach_hang WHERE ho_ten LIKE ?";
-    private final String FIND_BY_ID="SELECT * FROM khach_hang WHERE ma_khach_hang =?";
+    private final String SELECT_ALL = "SELECT kh.*, lk.ten_loai_khach FROM khach_hang kh LEFT JOIN loai_khach lk ON kh.ma_loai_khach = lk.ma_loai_khach";
+    private final String DELETE_BY_ID = "DELETE FROM khach_hang WHERE ma_khach_hang = ?";
+    private final String INSERT_INTO = "INSERT INTO khach_hang (ho_ten, ngay_sinh, gioi_tinh, so_cmnd, so_dien_thoai, email, dia_chi, ma_loai_khach) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    private final String UPDATE = "UPDATE khach_hang SET ho_ten = ?, ngay_sinh = ?, gioi_tinh = ?, so_cmnd = ?, so_dien_thoai = ?, email = ?, dia_chi = ?, ma_loai_khach = ? WHERE ma_khach_hang = ?";
+    private final String FIND_BY_NAME = "SELECT kh.*, lk.ten_loai_khach FROM khach_hang kh LEFT JOIN loai_khach lk ON kh.ma_loai_khach = lk.ma_loai_khach WHERE ho_ten LIKE ?";
+    private final String FIND_BY_ID = "SELECT kh.*, lk.ten_loai_khach FROM khach_hang kh LEFT JOIN loai_khach lk ON kh.ma_loai_khach = lk.ma_loai_khach WHERE kh.ma_khach_hang = ?";
+    private final String GET_ID_BY_NAME = "SELECT ma_loai_khach FROM loai_khach WHERE ten_loai_khach = ?";
     Connection conn = BaseRepository.getConnection();
+
     @Override
-    public List<KhachHang> findAll() {
-        List <KhachHang> list = new ArrayList();
-        try {
-            PreparedStatement stmt = conn.prepareStatement(SELECT_ALL);
-            ResultSet rs = stmt.executeQuery();
+    public List<KhachHangDTO> findAll() {
+        List<KhachHangDTO> list = new ArrayList<>();
+        try (PreparedStatement stmt = conn.prepareStatement(SELECT_ALL);
+             ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                KhachHang khachHang = new KhachHang();
-                khachHang.setMaKhachHang(rs.getInt("ma_khach_hang"));
-                khachHang.setHoTen(rs.getString("ho_ten"));
-                khachHang.setNgaySinh(rs.getDate("ngay_sinh"));
-                khachHang.setGioiTinh(rs.getBoolean("gioi_tinh"));
-                khachHang.setSoCMND(rs.getString("so_cmnd"));
-                khachHang.setSoDienThoai(rs.getString("so_dien_thoai"));
-                khachHang.setEmail(rs.getString("email"));
-                khachHang.setDiaChi(rs.getString("dia_chi"));
-                khachHang.setMaLoaiKhach(rs.getInt("ma_loai_khach"));
-                list.add(khachHang);
+                KhachHangDTO dto = new KhachHangDTO();
+                dto.setMaKhachHang(rs.getInt("ma_khach_hang"));
+                dto.setHoTen(rs.getString("ho_ten"));
+                dto.setNgaySinh(rs.getDate("ngay_sinh"));
+                dto.setGioiTinh(rs.getBoolean("gioi_tinh"));
+                dto.setSoCMND(rs.getString("so_cmnd"));
+                dto.setSoDienThoai(rs.getString("so_dien_thoai"));
+                dto.setEmail(rs.getString("email"));
+                dto.setDiaChi(rs.getString("dia_chi"));
+                dto.setLoaiKhach(rs.getString("ten_loai_khach"));
+                list.add(dto);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
         return list;
     }
 
     @Override
-    public boolean add(KhachHang khachHang) {
+    public boolean add(KhachHangDTO khachHang) {
         try {
+            // Lấy ID từ tên loại khách
+            int maLoaiKhach = 0;
+            try (PreparedStatement getIdStmt = conn.prepareStatement(GET_ID_BY_NAME)) {
+                getIdStmt.setString(1, khachHang.getLoaiKhach());
+                ResultSet rs = getIdStmt.executeQuery();
+                if (rs.next()) {
+                    maLoaiKhach = rs.getInt("ma_loai_khach");
+                } else {
+                    return false; // Không tìm thấy loại khách
+                }
+            }
+
             PreparedStatement stmt = conn.prepareStatement(INSERT_INTO);
             stmt.setString(1, khachHang.getHoTen());
-            stmt.setDate(2, (Date) khachHang.getNgaySinh());
-            stmt.setBoolean(3, khachHang.isGioiTinh());
-            stmt.setString(4, khachHang.getSoCMND());
-            stmt.setString(5, khachHang.getSoDienThoai());
-            stmt.setString(6,  khachHang.getEmail());
-            stmt.setString(7, khachHang.getDiaChi());
-            stmt.setInt(8, khachHang.getMaLoaiKhach());
-            int effectRow = stmt.executeUpdate();
-            return effectRow ==1;
-        } catch (SQLException e) {
-            System.out.println("lỗi kết nối database");
-            return false;
-        }
-    }
-
-    @Override
-    public boolean update(KhachHang khachHang) {
-        try {
-            PreparedStatement stmt = conn.prepareStatement(UPDATE_PRODUCT);
-            stmt.setString(1, khachHang.getHoTen());
-            stmt.setDate(2, (Date) khachHang.getNgaySinh());
+            stmt.setDate(2, new java.sql.Date(khachHang.getNgaySinh().getTime()));
             stmt.setBoolean(3, khachHang.isGioiTinh());
             stmt.setString(4, khachHang.getSoCMND());
             stmt.setString(5, khachHang.getSoDienThoai());
             stmt.setString(6, khachHang.getEmail());
             stmt.setString(7, khachHang.getDiaChi());
-            stmt.setInt(8, khachHang.getMaLoaiKhach());
-            stmt.setInt(9, khachHang.getMaKhachHang());
-            int effectRow = stmt.executeUpdate();
-            return effectRow == 1;
+            stmt.setInt(8, maLoaiKhach);
+            return stmt.executeUpdate() == 1;
         } catch (SQLException e) {
-            System.out.println("lỗi kết nối database");
+            e.printStackTrace();
             return false;
         }
     }
+
+    @Override
+    public boolean update(KhachHangDTO khachHang) {
+        try {
+            // Truy vấn ra mã loại khách từ tên
+            int maLoaiKhach = 0;
+            try (PreparedStatement getIdStmt = conn.prepareStatement(GET_ID_BY_NAME)) {
+                getIdStmt.setString(1, khachHang.getLoaiKhach());
+                ResultSet rs = getIdStmt.executeQuery();
+                if (rs.next()) {
+                    maLoaiKhach = rs.getInt("ma_loai_khach");
+                } else {
+                    return false; // không tìm thấy
+                }
+            }
+
+            PreparedStatement stmt = conn.prepareStatement(UPDATE);
+            stmt.setString(1, khachHang.getHoTen());
+            stmt.setDate(2, new java.sql.Date(khachHang.getNgaySinh().getTime()));
+            stmt.setBoolean(3, khachHang.isGioiTinh());
+            stmt.setString(4, khachHang.getSoCMND());
+            stmt.setString(5, khachHang.getSoDienThoai());
+            stmt.setString(6, khachHang.getEmail());
+            stmt.setString(7, khachHang.getDiaChi());
+            stmt.setInt(8, maLoaiKhach); // dùng mã loại khách thực sự
+            stmt.setInt(9, khachHang.getMaKhachHang());
+
+            return stmt.executeUpdate() == 1;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
 
     @Override
     public boolean delete(int id) {
-        try {
-            PreparedStatement preparedStatement = conn.prepareStatement(DELETE_BY_ID);
-            preparedStatement.setInt(1,id);
-            int effectRow = preparedStatement.executeUpdate();
-            return effectRow ==1;
+        try (PreparedStatement stmt = conn.prepareStatement(DELETE_BY_ID)) {
+            stmt.setInt(1, id);
+            return stmt.executeUpdate() == 1;
         } catch (SQLException e) {
-            System.out.println("lỗi kết nối database");
+            e.printStackTrace();
             return false;
         }
     }
 
     @Override
-    public List<KhachHang> findByName(String name) {
-        List<KhachHang> searchList = new ArrayList<>();
-        try {
-            PreparedStatement stmt = conn.prepareStatement(FIND_BY_NAME);
+    public List<KhachHangDTO> findByName(String name) {
+        List<KhachHangDTO> list = new ArrayList<>();
+        try (PreparedStatement stmt = conn.prepareStatement(FIND_BY_NAME)) {
             stmt.setString(1, "%" + name + "%");
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                KhachHang khachHang = new KhachHang()   ;
-                khachHang.setMaKhachHang(rs.getInt("ma_khach_hang"));
-                khachHang.setHoTen(rs.getString("ho_ten"));
-                khachHang.setNgaySinh(rs.getDate("ngay_sinh"));
-                khachHang.setGioiTinh(rs.getBoolean("gioi_tinh"));
-                khachHang.setSoCMND(rs.getString("so_cmnd"));
-                khachHang.setSoDienThoai(rs.getString("so_dien_thoai"));
-                khachHang.setEmail(rs.getString("email"));
-                khachHang.setDiaChi(rs.getString("dia_chi"));
-                khachHang.setMaLoaiKhach(rs.getInt("ma_loai_khach"));
-                searchList.add(khachHang);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return searchList;
-    }
-
-    @Override
-    public KhachHang findById(int id) {
-        KhachHang khachHang = null;
-        try {
-            PreparedStatement ps = conn.prepareStatement(FIND_BY_ID);
-            ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                khachHang = new KhachHang();
-                khachHang.setMaKhachHang(rs.getInt("ma_khach_hang"));
-                khachHang.setHoTen(rs.getString("ho_ten"));
-                khachHang.setNgaySinh(rs.getDate("ngay_sinh"));
-                khachHang.setGioiTinh(rs.getBoolean("gioi_tinh"));
-                khachHang.setSoCMND(rs.getString("so_cmnd"));
-                khachHang.setSoDienThoai(rs.getString("so_dien_thoai"));
-                khachHang.setEmail(rs.getString("email"));
-                khachHang.setDiaChi(rs.getString("dia_chi"));
-                khachHang.setMaLoaiKhach(rs.getInt("ma_loai_khach"));
+                KhachHangDTO dto = new KhachHangDTO();
+                dto.setMaKhachHang(rs.getInt("ma_khach_hang"));
+                dto.setHoTen(rs.getString("ho_ten"));
+                dto.setNgaySinh(rs.getDate("ngay_sinh"));
+                dto.setGioiTinh(rs.getBoolean("gioi_tinh"));
+                dto.setSoCMND(rs.getString("so_cmnd"));
+                dto.setSoDienThoai(rs.getString("so_dien_thoai"));
+                dto.setEmail(rs.getString("email"));
+                dto.setDiaChi(rs.getString("dia_chi"));
+                dto.setLoaiKhach(rs.getString("ten_loai_khach"));
+                list.add(dto);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return khachHang;
+        return list;
+    }
+
+    @Override
+    public KhachHangDTO findById(int id) {
+        KhachHangDTO dto = null;
+        try (PreparedStatement stmt = conn.prepareStatement(FIND_BY_ID)) {
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                dto = new KhachHangDTO();
+                dto.setMaKhachHang(rs.getInt("ma_khach_hang"));
+                dto.setHoTen(rs.getString("ho_ten"));
+                dto.setNgaySinh(rs.getDate("ngay_sinh"));
+                dto.setGioiTinh(rs.getBoolean("gioi_tinh"));
+                dto.setSoCMND(rs.getString("so_cmnd"));
+                dto.setSoDienThoai(rs.getString("so_dien_thoai"));
+                dto.setEmail(rs.getString("email"));
+                dto.setDiaChi(rs.getString("dia_chi"));
+                dto.setLoaiKhach(rs.getString("ten_loai_khach"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return dto;
     }
 }
