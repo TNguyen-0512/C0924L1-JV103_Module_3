@@ -4,106 +4,12 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Hệ thống Quản lý Nhân viên</title>
+    <title>Hệ thống Quản lý</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <c:import url="views/layout/labrary.jsp" />
-
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f8f9fa;
-            margin: 0;
-        }
-
-        .header {
-            background-color: #fff;
-            padding: 15px 30px;
-            border-bottom: 1px solid #dee2e6;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo-container {
-            display: flex;
-            align-items: center;
-        }
-
-        .logo {
-            height: 45px;
-            margin-right: 10px;
-        }
-
-        .logo-text {
-            font-size: 20px;
-            font-weight: bold;
-            color: #343a40;
-        }
-
-        .user-login {
-            font-size: 16px;
-            color: #495057;
-        }
-
-        .sidebar {
-            width: 200px;
-            background-color: #ffffff;
-            border-right: 1px solid #dee2e6;
-            padding-top: 20px;
-            height: 100vh;
-        }
-
-        .sidebar ul {
-            list-style: none;
-            padding-left: 20px;
-        }
-
-        .sidebar li {
-            margin-bottom: 15px;
-        }
-
-        .sidebar a {
-            text-decoration: none;
-            color: #495057;
-            font-weight: 500;
-        }
-
-        .sidebar a:hover {
-            color: #007bff;
-        }
-
-        .main-content {
-            flex: 1;
-            padding: 30px;
-            background-color: #f1f3f5;
-        }
-
-        .footer {
-            background-color: #fff;
-            text-align: center;
-            padding: 10px 0;
-            border-top: 1px solid #dee2e6;
-            font-size: 14px;
-            color: #6c757d;
-        }
-
-        .content-wrapper {
-            display: flex;
-            min-height: calc(100vh - 110px); /* trừ header và footer */
-        }
-
-        .navbar .nav-link {
-            font-weight: 500;
-        }
-
-        .navbar .nav-link:hover {
-            color: #0056b3;
-        }
-    </style>
+    <link rel="stylesheet" href="css/index_css.css">
 </head>
-
 <body>
-
 <div class="header">
     <div class="logo-container">
         <img src="views/images/furama-logo.png" alt="Logo" class="logo">
@@ -130,7 +36,7 @@
                     <a class="nav-link" href="/khachhang">Khách Hàng</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Dịch Vụ</a>
+                    <a class="nav-link" href="/dichvu">Dịch Vụ</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Hợp Đồng</a>
@@ -157,6 +63,7 @@
 </div>
 
 <div class="footer">
+<%--    <img src="batman.gif" alt="batman" class="batman">--%>
     © 2025 - Bùi Trung Nguyên - Hệ thống Quản lý Furama
 </div>
 

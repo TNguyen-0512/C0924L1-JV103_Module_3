@@ -42,7 +42,7 @@ public class KhachHangController extends HttpServlet {
                 searchByName(req, resp);
                 break;
             default:
-                showList(req, resp);
+            showList(req, resp);
         }
     }
 

@@ -1,0 +1,116 @@
+/* Reset & Font */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Nền toàn trang */
+body {
+    background-image: url("../views/images/bg_login.png"); /* Cập nhật đúng đường dẫn */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Hộp login */
+.box {
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    width: 360px;
+}
+
+/* Nội dung hộp */
+.container {
+    text-align: center;
+    color: white;
+    margin-bottom: 20px;
+}
+
+.container span {
+    font-size: 18px;
+    display: block;
+}
+
+.container header {
+    font-size: 28px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+/* Input form */
+.input-field {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.input-field .input {
+    width: 100%;
+    height: 45px;
+    border: none;
+    border-radius: 30px;
+    padding: 0 15px 0 40px;
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+}
+
+.input-field .input::placeholder {
+    color: #eee;
+}
+
+.input-field i {
+    position: absolute;
+    top: 13px;
+    left: 15px;
+    color: white;
+    font-size: 18px;
+}
+
+/* Nút submit */
+.submit {
+    width: 100%;
+    height: 45px;
+    border: none;
+    border-radius: 30px;
+    background: #fff;
+    color: #333;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.submit:hover {
+    background: #f0f0f0;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* Bottom: Nhớ mật khẩu & Quên mật khẩu */
+.bottom {
+    display: flex;
+    justify-content: space-between;
+    color: #fff;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.bottom a {
+    color: #fff;
+    text-decoration: underline;
+}
+
+.bottom input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+/* Fix lỗi thẻ sai */
+lable {
+    display: inline; /* dùng label chuẩn nên có thể xoá đoạn này nếu bạn sửa lại từ <lable> thành <label> */
+}
